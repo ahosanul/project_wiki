@@ -1,0 +1,113 @@
+{
+  "run_id": "golden-run-001",
+  "project_name": "example-grails-app",
+  "description": "Golden graph snapshot for a minimal Grails application with User domain, controller, and views",
+  "nodes": [
+    {
+      "id": "com.example.domain.User",
+      "kind": "Domain",
+      "name": "User",
+      "fqn": "com.example.domain.User",
+      "file_path": "grails-app/domain/com/example/User.groovy",
+      "line_start": 3,
+      "line_end": 23,
+      "language": "groovy",
+      "properties": {
+        "gorm_table": "users",
+        "fields": ["id", "email", "username"],
+        "hasMany": {"roles": "Role"},
+        "belongsTo": ["Role"]
+      }
+    },
+    {
+      "id": "com.example.UserController",
+      "kind": "Controller",
+      "name": "UserController",
+      "fqn": "com.example.UserController",
+      "file_path": "grails-app/controllers/com/example/UserController.groovy",
+      "line_start": 3,
+      "line_end": 42,
+      "language": "groovy",
+      "properties": {
+        "actions": ["index", "list", "show", "save", "delete"]
+      }
+    },
+    {
+      "id": "com.example.UserService",
+      "kind": "Service",
+      "name": "UserService",
+      "fqn": "com.example.UserService",
+      "file_path": "grails-app/services/com/example/UserService.groovy",
+      "line_start": 5,
+      "line_end": 28,
+      "language": "groovy",
+      "properties": {
+        "transactional": true
+      }
+    },
+    {
+      "id": "views/user/list.gsp",
+      "kind": "GspView",
+      "name": "list",
+      "fqn": "views/user/list",
+      "file_path": "grails-app/views/user/list.gsp",
+      "line_start": 1,
+      "line_end": 41,
+      "language": "gsp",
+      "properties": {
+        "layout": "main",
+        "model_variables": ["users", "flash"]
+      }
+    }
+  ],
+  "edges": [
+    {
+      "source_id": "com.example.UserController",
+      "target_id": "com.example.UserService",
+      "type": "INJECTS",
+      "file_path": "grails-app/controllers/com/example/UserController.groovy",
+      "line": 5,
+      "confidence": "EXACT"
+    },
+    {
+      "source_id": "com.example.UserController.show",
+      "target_id": "com.example.UserService.findById",
+      "type": "CALLS",
+      "file_path": "grails-app/controllers/com/example/UserController.groovy",
+      "line": 16,
+      "confidence": "EXACT"
+    },
+    {
+      "source_id": "com.example.UserController.index",
+      "target_id": "com.example.UserController.list",
+      "type": "REDIRECTS",
+      "file_path": "grails-app/controllers/com/example/UserController.groovy",
+      "line": 8,
+      "confidence": "EXACT"
+    },
+    {
+      "source_id": "com.example.UserController.save",
+      "target_id": "views/user/create.gsp",
+      "type": "RENDERS",
+      "file_path": "grails-app/controllers/com/example/UserController.groovy",
+      "line": 31,
+      "confidence": "EXACT"
+    },
+    {
+      "source_id": "views/user/list.gsp",
+      "target_id": "layouts/main.gsp",
+      "type": "USES_LAYOUT",
+      "file_path": "grails-app/views/user/list.gsp",
+      "line": 4,
+      "confidence": "EXACT"
+    },
+    {
+      "source_id": "views/user/list.gsp",
+      "target_id": "com.example.UserController.show",
+      "type": "LINKS_TO_ACTION",
+      "file_path": "grails-app/views/user/list.gsp",
+      "line": 28,
+      "confidence": "EXACT"
+    }
+  ]
+}

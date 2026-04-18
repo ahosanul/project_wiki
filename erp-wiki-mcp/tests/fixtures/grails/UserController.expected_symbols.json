@@ -1,0 +1,97 @@
+{
+  "file_path": "UserController.groovy",
+  "language": "groovy",
+  "artifact_type": "controller",
+  "expected_symbols": [
+    {
+      "id": "com.example.UserController",
+      "kind": "Controller",
+      "name": "UserController",
+      "fqn": "com.example.UserController",
+      "line_start": 3,
+      "line_end": 42,
+      "actions": ["index", "list", "show", "save", "delete"]
+    },
+    {
+      "id": "com.example.UserController.index",
+      "kind": "Action",
+      "name": "index",
+      "fqn": "com.example.UserController.index",
+      "line_start": 7,
+      "line_end": 9,
+      "renders": null,
+      "redirects_to": "list"
+    },
+    {
+      "id": "com.example.UserController.list",
+      "kind": "Action",
+      "name": "list",
+      "fqn": "com.example.UserController.list",
+      "line_start": 11,
+      "line_end": 13,
+      "renders": "list",
+      "model_vars": ["users"]
+    },
+    {
+      "id": "com.example.UserController.show",
+      "kind": "Action",
+      "name": "show",
+      "fqn": "com.example.UserController.show",
+      "line_start": 15,
+      "line_end": 23,
+      "renders": "show",
+      "model_vars": ["user"],
+      "redirects_to": "list"
+    },
+    {
+      "id": "com.example.UserController.save",
+      "kind": "Action",
+      "name": "save",
+      "fqn": "com.example.UserController.save",
+      "line_start": 25,
+      "line_end": 33,
+      "renders": ["create", "redirect:show"],
+      "model_vars": ["user"]
+    },
+    {
+      "id": "com.example.UserController.delete",
+      "kind": "Action",
+      "name": "delete",
+      "fqn": "com.example.UserController.delete",
+      "line_start": 35,
+      "line_end": 41,
+      "renders": null,
+      "redirects_to": "list"
+    }
+  ],
+  "expected_edges": [
+    {
+      "source_id": "com.example.UserController",
+      "target_hint": "UserService",
+      "type": "INJECTS",
+      "line": 5,
+      "confidence": "EXACT"
+    },
+    {
+      "source_id": "com.example.UserController.show",
+      "target_hint": "com.example.UserService.findById",
+      "type": "CALLS",
+      "line": 16,
+      "confidence": "EXACT"
+    },
+    {
+      "source_id": "com.example.UserController.index",
+      "target_hint": "com.example.UserController.list",
+      "type": "REDIRECTS",
+      "line": 8,
+      "confidence": "EXACT"
+    },
+    {
+      "source_id": "com.example.UserController.save",
+      "target_hint": "views/create.gsp",
+      "type": "RENDERS",
+      "line": 31,
+      "confidence": "EXACT"
+    }
+  ]
+}

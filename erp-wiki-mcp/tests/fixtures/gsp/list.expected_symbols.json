@@ -1,0 +1,56 @@
+{
+  "file_path": "list.gsp",
+  "language": "gsp",
+  "artifact_type": "view",
+  "expected_symbols": [
+    {
+      "id": "views/user/list.gsp",
+      "kind": "GspView",
+      "name": "list",
+      "fqn": "views/user/list",
+      "line_start": 1,
+      "line_end": 41,
+      "layout": "main",
+      "title": "User List",
+      "model_variables": ["users", "flash"],
+      "tags_used": ["g:if", "g:each", "g:link"]
+    }
+  ],
+  "expected_edges": [
+    {
+      "source_id": "views/user/list.gsp",
+      "target_hint": "layouts/main.gsp",
+      "type": "USES_LAYOUT",
+      "line": 4,
+      "confidence": "EXACT"
+    },
+    {
+      "source_id": "views/user/list.gsp",
+      "target_hint": "com.example.UserController.show",
+      "type": "LINKS_TO_ACTION",
+      "line": 28,
+      "confidence": "EXACT"
+    },
+    {
+      "source_id": "views/user/list.gsp",
+      "target_hint": "com.example.UserController.edit",
+      "type": "LINKS_TO_ACTION",
+      "line": 29,
+      "confidence": "EXACT"
+    },
+    {
+      "source_id": "views/user/list.gsp",
+      "target_hint": "com.example.UserController.delete",
+      "type": "LINKS_TO_ACTION",
+      "line": 30,
+      "confidence": "EXACT"
+    },
+    {
+      "source_id": "views/user/list.gsp",
+      "target_hint": "com.example.UserController.create",
+      "type": "LINKS_TO_ACTION",
+      "line": 37,
+      "confidence": "EXACT"
+    }
+  ]
+}

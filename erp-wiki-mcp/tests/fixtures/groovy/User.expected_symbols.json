@@ -1,0 +1,34 @@
+{
+  "file_path": "User.groovy",
+  "language": "groovy",
+  "artifact_type": "domain",
+  "expected_symbols": [
+    {
+      "id": "com.example.domain.User",
+      "kind": "Domain",
+      "name": "User",
+      "fqn": "com.example.domain.User",
+      "line_start": 3,
+      "line_end": 23,
+      "gorm_table": "users",
+      "fields": ["id", "email", "username"],
+      "relationships": {
+        "hasMany": {"roles": "Role"},
+        "belongsTo": ["Role"]
+      }
+    },
+    {
+      "id": "com.example.domain.User.toString",
+      "kind": "Method",
+      "name": "toString",
+      "fqn": "com.example.domain.User.toString",
+      "line_start": 20,
+      "line_end": 22,
+      "return_type": "String"
+    }
+  ],
+  "constraints": {
+    "email": ["blank: false", "unique: true"],
+    "username": ["blank: false", "unique: true"]
+  }
+}

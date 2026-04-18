@@ -1,0 +1,63 @@
+{
+  "file_path": "UserService.java",
+  "language": "java",
+  "expected_symbols": [
+    {
+      "id": "com.example.service.UserService",
+      "kind": "Class",
+      "name": "UserService",
+      "fqn": "com.example.service.UserService",
+      "line_start": 6,
+      "line_end": 28,
+      "annotations": ["org.springframework.stereotype.Service"]
+    },
+    {
+      "id": "com.example.service.UserService.findById",
+      "kind": "Method",
+      "name": "findById",
+      "fqn": "com.example.service.UserService.findById",
+      "line_start": 14,
+      "line_end": 19,
+      "parameters": ["Long userId"],
+      "return_type": "User",
+      "docstring": "Finds a user by their ID."
+    },
+    {
+      "id": "com.example.service.UserService.saveUser",
+      "kind": "Method",
+      "name": "saveUser",
+      "fqn": "com.example.service.UserService.saveUser",
+      "line_start": 21,
+      "line_end": 25,
+      "parameters": ["User user"],
+      "return_type": "void"
+    },
+    {
+      "id": "com.example.service.UserService.formatEmail",
+      "kind": "Method",
+      "name": "formatEmail",
+      "fqn": "com.example.service.UserService.formatEmail",
+      "line_start": 27,
+      "line_end": 29,
+      "parameters": ["String email"],
+      "return_type": "String",
+      "visibility": "private"
+    }
+  ],
+  "expected_edges": [
+    {
+      "source_id": "com.example.service.UserService.findById",
+      "target_hint": "User.<init>",
+      "type": "CALLS",
+      "line": 18,
+      "confidence": "EXACT"
+    },
+    {
+      "source_id": "com.example.service.UserService.saveUser",
+      "target_hint": "User.getEmail",
+      "type": "CALLS",
+      "line": 23,
+      "confidence": "EXACT"
+    }
+  ]
+}
