@@ -49,13 +49,10 @@ async def server_lifespan(server: Server):
     registry = RegistryDB(settings.db_path)
     await registry.init_db()
 
-    # Store registry in server state
-    server.state.registry = registry
-
     logger.info("Server starting", extra={"data_dir": str(settings.db_path.parent)})
 
     try:
-        yield
+        yield registry
     finally:
         logger.info("Server shutting down")
 
@@ -67,7 +64,7 @@ def create_server() -> Server:
     @server.call_tool()
     async def call_index_project(name: str, arguments: dict) -> list:
         """Handle index_project tool calls."""
-        registry: RegistryDB = server.state.registry
+        registry: RegistryDB = server.request_context.lifespan_context
 
         path = arguments.get("path")
         if not path:
@@ -90,7 +87,7 @@ def create_server() -> Server:
     @server.call_tool()
     async def call_status(name: str, arguments: dict) -> list:
         """Handle status tool calls."""
-        registry: RegistryDB = server.state.registry
+        registry: RegistryDB = server.request_context.lifespan_context
 
         run_id = arguments.get("run_id")
         project_id = arguments.get("project_id")
