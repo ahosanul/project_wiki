@@ -1,10 +1,14 @@
 """Ask tool for natural language Q&A."""
 
+import logging
+
 from erp_wiki_mcp.embeddings.embedder import embed
 from erp_wiki_mcp.graph.store import GraphStore
 from erp_wiki_mcp.registry.db import RegistryDB
 from erp_wiki_mcp.wiki.planner import plan
 from erp_wiki_mcp.wiki.router import classify_intent
+
+logger = logging.getLogger(__name__)
 
 
 async def handler(
@@ -23,9 +27,16 @@ async def handler(
     Returns:
         {answer, context_nodes[], context_edges[], chunks[], intent, query_plan[]}
     """
+    logger.info(f"[ask] Starting handler for project_id={project_id}, question={question[:50]}...")
+    
     registry = RegistryDB()
+    logger.info(f"[ask] Registry data_dir={registry.data_dir}")
+    
     graph_store = GraphStore(registry.data_dir)
+    logger.info(f"[ask] GraphStore initialized with db_path={graph_store.db_path if hasattr(graph_store, 'db_path') else 'N/A'}")
+    
     vector_store = None  # Would initialize from config
+    logger.info(f"[ask] Vector store initialized: {vector_store is not None}")
     
     # Classify intent
     intent = classify_intent(question)

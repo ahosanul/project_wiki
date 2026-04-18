@@ -63,14 +63,17 @@ class GraphStore:
         Args:
             db_path: Path to KuzuDB database directory
         """
+        logger.info(f"[GraphStore] Initializing with db_path={db_path}")
         self.db_path = db_path
         self.conn: kuzu.Connection | None = None
         self.db: kuzu.Database | None = None
 
     def connect(self) -> None:
         """Connect to the database and initialize schema."""
+        logger.info(f"[GraphStore] Connecting to database at {self.db_path}")
         self.db = kuzu.Database(str(self.db_path))
         self.conn = kuzu.Connection(self.db)
+        logger.info(f"[GraphStore] Connected successfully")
         self._init_schema()
 
     def close(self) -> None:
@@ -82,12 +85,15 @@ class GraphStore:
 
     def _init_schema(self) -> None:
         """Initialize database schema."""
-        for query in SCHEMA_QUERIES:
+        logger.info(f"[GraphStore] Initializing schema with {len(SCHEMA_QUERIES)} queries")
+        for i, query in enumerate(SCHEMA_QUERIES):
             try:
                 self.conn.execute(query)
+                logger.debug(f"[GraphStore] Schema query {i+1}/{len(SCHEMA_QUERIES)} executed successfully")
             except Exception as e:
                 # Some indexes might already exist
                 logger.debug(f"Schema init (may be existing): {e}")
+        logger.info(f"[GraphStore] Schema initialization complete")
 
     def execute(self, query: str, parameters: dict | None = None) -> kuzu.QueryResult:
         """
