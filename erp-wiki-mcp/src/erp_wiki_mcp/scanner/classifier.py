@@ -23,6 +23,11 @@ def classify(file_path: str, grails_version: str) -> tuple[str, str]:
 
     # Common patterns for both versions (first-match wins)
     common_rules = [
+        # Hidden/config files (should be checked first)
+        ("", ".gitignore", "gitignore", "text"),
+        ("", ".mcpignore", "mcpignore", "text"),
+        ("", ".editorconfig", "editorconfig", "text"),
+        ("", ".gitattributes", "gitattributes", "text"),
         ("grails-app/controllers/", "*controller.groovy", "grails_controller", "groovy"),
         ("grails-app/services/", "*service.groovy", "grails_service", "groovy"),
         ("grails-app/domain/", "*.groovy", "grails_domain", "groovy"),
