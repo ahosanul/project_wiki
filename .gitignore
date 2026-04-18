@@ -8,53 +8,50 @@ __pycache__/
 env/
 venv/
 .venv/
-.venv*/
 .ENV
-.env
-.env.*
-.env.local
-.coverage
-htmlcov/
-.coveragerc
+.ENV.local
 .python-version
-
-# Build and distribution artifacts
-dist/
-build/
-*.egg-info/
-.eggs/
-
-# Testing
 .pytest_cache/
 .mypy_cache/
-.hypothesis/
+.coverage
+htmlcov/
+
+# Build artifacts
+build/
+dist/
+*.egg
+*.egg-info/
+*.so
+*.dylib
+*.dll
+*.exe
+*.out
+
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
 # Logs
 *.log
 
-# OS generated files
-.DS_Store
-Thumbs.db
+# Environment variables
+.env
+.env.local
+.env.*
 
-# Editor files
+# IDE
 .vscode/
 .idea/
 *.swp
 *.swo
 *.tmp
 
-# Compiled files
-*.o
-*.obj
-*.so
-*.a
-*.dll
-*.exe
-*.out
-*.class
+# OS
+.DS_Store
+Thumbs.db
 
-# Dependencies
-node_modules/
-target/
-.gradle/
+# Coverage
+coverage/
 ```
