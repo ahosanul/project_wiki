@@ -14,6 +14,7 @@ from erp_wiki_mcp.config import settings
 from erp_wiki_mcp.registry.db import RegistryDB
 from erp_wiki_mcp.tools.index_project import index_project
 from erp_wiki_mcp.tools.status import get_status
+from erp_wiki_mcp.tools.list_projects import list_projects
 
 
 def setup_logging() -> None:
@@ -100,6 +101,15 @@ def create_server() -> Server:
 
         return [{"type": "text", "text": str(result)}]
 
+    @server.call_tool()
+    async def call_list_projects(name: str, arguments: dict) -> list:
+        """Handle list_projects tool calls."""
+        registry: RegistryDB = server.request_context.lifespan_context
+
+        result = await list_projects(registry=registry)
+
+        return [{"type": "text", "text": str(result)}]
+
     # Register tools with MCP
     @server.list_tools()
     async def list_tools() -> list:
@@ -149,6 +159,14 @@ def create_server() -> Server:
                             "description": "Project ID to query (if run_id not provided)",
                         },
                     },
+                },
+            ),
+            types.Tool(
+                name="list_projects",
+                description="List all indexed projects",
+                inputSchema={
+                    "type": "object",
+                    "properties": {},
                 },
             ),
         ]
