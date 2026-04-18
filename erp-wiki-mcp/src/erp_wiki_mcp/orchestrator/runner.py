@@ -3,9 +3,14 @@
 import logging
 import time
 import uuid
+from concurrent.futures import ProcessPoolExecutor, as_completed
 from datetime import datetime, timezone
 from pathlib import Path
 
+from erp_wiki_mcp.extractors.java_extractor import extract_java
+from erp_wiki_mcp.graph.deletes import delete_stale_symbols_batch, delete_symbols_for_file
+from erp_wiki_mcp.graph.store import GraphStore
+from erp_wiki_mcp.graph.upsert import upsert_edges, upsert_nodes
 from erp_wiki_mcp.hash_gate.gate import partition
 from erp_wiki_mcp.orchestrator.progress import PipelineStage, Progress
 from erp_wiki_mcp.orchestrator.state import (
@@ -15,8 +20,13 @@ from erp_wiki_mcp.orchestrator.state import (
     transition_to_failed,
     transition_to_running,
 )
+from erp_wiki_mcp.parsers.base import ParseResult
+from erp_wiki_mcp.parsers.java_parser import parse_java
 from erp_wiki_mcp.registry.db import INDEX_VERSION, RegistryDB
-from erp_wiki_mcp.registry.models import FileRecord, Project, Run
+from erp_wiki_mcp.registry.models import FileRecord, Node, Project, RawEdge, Run
+from erp_wiki_mcp.resolver.call_resolver import resolve_calls
+from erp_wiki_mcp.resolver.dangling_sweep import run_dangling_sweep
+from erp_wiki_mcp.resolver.index_builder import build_index_tables
 from erp_wiki_mcp.scanner.classifier import classify
 from erp_wiki_mcp.scanner.walker import walk
 
@@ -103,6 +113,8 @@ async def run(
     mode: str,
     scope: str,
     dry_run: bool = False,
+    graph_store: GraphStore | None = None,
+    max_workers: int = 8,
 ) -> Run:
     """
     Run the indexing pipeline.
@@ -113,6 +125,8 @@ async def run(
         mode: "dry_run" | "full"
         scope: Scope filter
         dry_run: If True, only scan and hash, no writes
+        graph_store: Optional KuzuDB graph store
+        max_workers: Max parallel workers for parsing
 
     Returns:
         Run record with results
