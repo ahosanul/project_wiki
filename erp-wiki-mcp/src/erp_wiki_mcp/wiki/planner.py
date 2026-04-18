@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from erp_wiki_mcp.embeddings.chunker import Chunk
 from erp_wiki_mcp.embeddings.embedder import embed
 from erp_wiki_mcp.embeddings.vector_store import SearchResult, VectorStore
-from erp_wiki_mcp.graph.queries import GraphStore
+from erp_wiki_mcp.graph.store import GraphStore
 from erp_wiki_mcp.registry.models import Node, RawEdge
 
 

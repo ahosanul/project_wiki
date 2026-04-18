@@ -16,6 +16,10 @@ from erp_wiki_mcp.tools.index_project import index_project
 from erp_wiki_mcp.tools.status import get_status
 from erp_wiki_mcp.tools.list_projects import list_projects
 from erp_wiki_mcp.tools.rebuild import handler as rebuild_handler
+from erp_wiki_mcp.tools.query import query_graph
+from erp_wiki_mcp.tools.ask import handler as ask_handler
+from erp_wiki_mcp.graph.store import GraphStore
+from erp_wiki_mcp.graph.queries import list_templates
 
 
 def setup_logging() -> None:
@@ -129,6 +133,55 @@ def create_server() -> Server:
 
         return [{"type": "text", "text": str(result)}]
 
+    @server.call_tool()
+    async def call_query(name: str, arguments: dict) -> list:
+        """Handle query tool calls for graph queries."""
+        registry: RegistryDB = server.request_context.lifespan_context
+
+        project_id = arguments.get("project_id")
+        if not project_id:
+            return [{"type": "text", "text": "Error: 'project_id' argument is required"}]
+
+        template = arguments.get("template")
+        if not template:
+            available = ", ".join(list_templates())
+            return [{"type": "text", "text": f"Error: 'template' argument is required. Available: {available}"}]
+
+        args = arguments.get("args", {})
+
+        graph_store = GraphStore(registry.data_dir)
+        result = await query_graph(
+            store=graph_store,
+            project_id=project_id,
+            template=template,
+            args=args,
+        )
+
+        return [{"type": "text", "text": str(result)}]
+
+    @server.call_tool()
+    async def call_ask(name: str, arguments: dict) -> list:
+        """Handle ask tool calls for natural language Q&A."""
+        registry: RegistryDB = server.request_context.lifespan_context
+
+        project_id = arguments.get("project_id")
+        if not project_id:
+            return [{"type": "text", "text": "Error: 'project_id' argument is required"}]
+
+        question = arguments.get("question")
+        if not question:
+            return [{"type": "text", "text": "Error: 'question' argument is required"}]
+
+        max_depth = arguments.get("max_depth", 3)
+
+        result = await ask_handler(
+            project_id=project_id,
+            question=question,
+            max_depth=max_depth,
+        )
+
+        return [{"type": "text", "text": str(result)}]
+
     # Register tools with MCP
     @server.list_tools()
     async def list_tools() -> list:
@@ -211,6 +264,51 @@ def create_server() -> Server:
                         },
                     },
                     "required": ["project_id"],
+                },
+            ),
+            types.Tool(
+                name="query",
+                description="Execute a graph query using a named template (find_symbol, callers_of, callees_of, file_symbols, injects, extends, implements, declares)",
+                inputSchema={
+                    "type": "object",
+                    "properties": {
+                        "project_id": {
+                            "type": "string",
+                            "description": "Project identifier",
+                        },
+                        "template": {
+                            "type": "string",
+                            "description": "Query template name (find_symbol, callers_of, callees_of, file_symbols, injects, extends, implements, declares)",
+                        },
+                        "args": {
+                            "type": "object",
+                            "description": "Additional query arguments (e.g., q, id, fp)",
+                        },
+                    },
+                    "required": ["project_id", "template"],
+                },
+            ),
+            types.Tool(
+                name="ask",
+                description="Ask a natural language question about the codebase",
+                inputSchema={
+                    "type": "object",
+                    "properties": {
+                        "project_id": {
+                            "type": "string",
+                            "description": "Project identifier",
+                        },
+                        "question": {
+                            "type": "string",
+                            "description": "Natural language question about the codebase",
+                        },
+                        "max_depth": {
+                            "type": "integer",
+                            "default": 3,
+                            "description": "Max graph traversal depth",
+                        },
+                    },
+                    "required": ["project_id", "question"],
                 },
             ),
         ]
