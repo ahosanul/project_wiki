@@ -37,4 +37,7 @@ htmlcov/
 # Testing
 .pytest_cache/
 .mypy_cache/
+
+.claude/
+.gemini/
 ```
