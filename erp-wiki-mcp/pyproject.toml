@@ -1,0 +1,30 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "erp-wiki-mcp"
+version = "0.1.0"
+description = "MCP server for indexing Grails/Java projects into a knowledge graph"
+requires-python = ">=3.11"
+dependencies = [
+    "mcp>=1.0.0",
+    "aiosqlite>=0.20.0",
+    "blake3>=1.0.0",
+    "pydantic-settings>=2.0.0",
+    "structlog>=24.0.0",
+    "gitignore-parser>=0.1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/erp_wiki_mcp"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
