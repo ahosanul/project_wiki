@@ -15,6 +15,7 @@ from erp_wiki_mcp.registry.db import RegistryDB
 from erp_wiki_mcp.tools.index_project import index_project
 from erp_wiki_mcp.tools.status import get_status
 from erp_wiki_mcp.tools.list_projects import list_projects
+from erp_wiki_mcp.tools.rebuild import handler as rebuild_handler
 
 
 def setup_logging() -> None:
@@ -110,6 +111,24 @@ def create_server() -> Server:
 
         return [{"type": "text", "text": str(result)}]
 
+    @server.call_tool()
+    async def call_rebuild(name: str, arguments: dict) -> list:
+        """Handle rebuild tool calls."""
+        project_id = arguments.get("project_id")
+        if not project_id:
+            return [{"type": "text", "text": "Error: 'project_id' argument is required"}]
+
+        scope = arguments.get("scope", "incremental")
+        watch = arguments.get("watch", False)
+
+        result = await rebuild_handler(
+            project_id=project_id,
+            scope=scope,
+            watch=watch,
+        )
+
+        return [{"type": "text", "text": str(result)}]
+
     # Register tools with MCP
     @server.list_tools()
     async def list_tools() -> list:
@@ -167,6 +186,31 @@ def create_server() -> Server:
                 inputSchema={
                     "type": "object",
                     "properties": {},
+                },
+            ),
+            types.Tool(
+                name="rebuild",
+                description="Re-index a project with specified scope (incremental, full, file:<path>, module:<dir>, git:<commit_range>)",
+                inputSchema={
+                    "type": "object",
+                    "properties": {
+                        "project_id": {
+                            "type": "string",
+                            "description": "Project identifier to rebuild",
+                        },
+                        "scope": {
+                            "type": "string",
+                            "enum": ["incremental", "full"],
+                            "default": "incremental",
+                            "description": "Rebuild scope: incremental, full, file:<path>, module:<dir>, or git:<commit_range>",
+                        },
+                        "watch": {
+                            "type": "boolean",
+                            "default": False,
+                            "description": "If True, start file watcher after rebuild",
+                        },
+                    },
+                    "required": ["project_id"],
                 },
             ),
         ]
