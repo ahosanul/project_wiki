@@ -219,71 +219,71 @@ def _extract_class_nodes_and_edges(
     
     if class_body is not None:
         for child in class_body.children:
-        if child.type == "method_declaration":
-            method_nodes, method_edges = _extract_method_nodes_and_edges(
-                child, fqn, file_path, source, class_node.id
-            )
-            nodes.extend(method_nodes)
-            edges.extend(method_edges)
-
-            # Add DECLARES edge from class to method
-            if method_nodes:
-                edges.append(
-                    RawEdge(
-                        source_id=class_node.id,
-                        target_id=method_nodes[0].id,
-                        target_hint=None,
-                        type="DECLARES",
-                        file_path=file_path,
-                        line=child.start_point[0] + 1,
-                        confidence="EXACT",
-                        extractor="java",
-                    )
+            if child.type == "method_declaration":
+                method_nodes, method_edges = _extract_method_nodes_and_edges(
+                    child, fqn, file_path, source, class_node.id
                 )
+                nodes.extend(method_nodes)
+                edges.extend(method_edges)
 
-        elif child.type == "constructor_declaration":
-            ctor_nodes, ctor_edges = _extract_constructor_nodes_and_edges(
-                child, fqn, file_path, source, class_node.id
-            )
-            nodes.extend(ctor_nodes)
-            edges.extend(ctor_edges)
-
-            # Add DECLARES edge from class to constructor
-            if ctor_nodes:
-                edges.append(
-                    RawEdge(
-                        source_id=class_node.id,
-                        target_id=ctor_nodes[0].id,
-                        target_hint=None,
-                        type="DECLARES",
-                        file_path=file_path,
-                        line=child.start_point[0] + 1,
-                        confidence="EXACT",
-                        extractor="java",
+                # Add DECLARES edge from class to method
+                if method_nodes:
+                    edges.append(
+                        RawEdge(
+                            source_id=class_node.id,
+                            target_id=method_nodes[0].id,
+                            target_hint=None,
+                            type="DECLARES",
+                            file_path=file_path,
+                            line=child.start_point[0] + 1,
+                            confidence="EXACT",
+                            extractor="java",
+                        )
                     )
+
+            elif child.type == "constructor_declaration":
+                ctor_nodes, ctor_edges = _extract_constructor_nodes_and_edges(
+                    child, fqn, file_path, source, class_node.id
                 )
+                nodes.extend(ctor_nodes)
+                edges.extend(ctor_edges)
 
-        elif child.type == "field_declaration":
-            field_nodes, field_edges = _extract_field_nodes_and_edges(
-                child, fqn, file_path, source, class_node.id
-            )
-            nodes.extend(field_nodes)
-            edges.extend(field_edges)
-
-            # Add DECLARES edge from class to field
-            if field_nodes:
-                edges.append(
-                    RawEdge(
-                        source_id=class_node.id,
-                        target_id=field_nodes[0].id,
-                        target_hint=None,
-                        type="DECLARES",
-                        file_path=file_path,
-                        line=child.start_point[0] + 1,
-                        confidence="EXACT",
-                        extractor="java",
+                # Add DECLARES edge from class to constructor
+                if ctor_nodes:
+                    edges.append(
+                        RawEdge(
+                            source_id=class_node.id,
+                            target_id=ctor_nodes[0].id,
+                            target_hint=None,
+                            type="DECLARES",
+                            file_path=file_path,
+                            line=child.start_point[0] + 1,
+                            confidence="EXACT",
+                            extractor="java",
+                        )
                     )
+
+            elif child.type == "field_declaration":
+                field_nodes, field_edges = _extract_field_nodes_and_edges(
+                    child, fqn, file_path, source, class_node.id
                 )
+                nodes.extend(field_nodes)
+                edges.extend(field_edges)
+
+                # Add DECLARES edge from class to field
+                if field_nodes:
+                    edges.append(
+                        RawEdge(
+                            source_id=class_node.id,
+                            target_id=field_nodes[0].id,
+                            target_hint=None,
+                            type="DECLARES",
+                            file_path=file_path,
+                            line=child.start_point[0] + 1,
+                            confidence="EXACT",
+                            extractor="java",
+                        )
+                    )
 
     # Handle extends
     if superclass_hint:
@@ -726,26 +726,12 @@ def extract_java(parse_result: ParseResult, project_id: str, run_id: str) -> Ext
             nodes.extend(enum_nodes)
             edges.extend(enum_edges)
 
-    # Generate unique IDs for all nodes
+    # Generate unique IDs for all nodes FIRST, before creating edges
     # Format: {project_id}:{kind}:{fqn_or_path}[#{member}][({signature})]
     for node in nodes:
         node.project_id = project_id
         node.last_run_id = run_id
         # Create ID from project_id, kind, and fqn
         node.id = f"{project_id}:{node.kind}:{node.fqn}"
-
-    # Update edge source_ids with actual node IDs
-    edge_source_map = {}
-    for node in nodes:
-        edge_source_map[(parse_result.file_path, node.kind, node.name)] = node.id
-
-    for edge in edges:
-        # Try to resolve source_id from the file and line
-        for node in nodes:
-            if node.file_path == edge.file_path:
-                # Check if this node could be the source based on line proximity
-                if abs(node.line_start - edge.line) <= 5:
-                    edge.source_id = node.id
-                    break
 
     return ExtractorResult(nodes=nodes, raw_edges=edges)

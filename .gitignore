@@ -8,11 +8,15 @@ __pycache__/
 venv/
 node_modules/
 
-# Test and coverage
-.pytest_cache/
-.coverage
-coverage/
-htmlcov/
+# Build directories
+dist/
+build/
+target/
+
+# Logs and temporary files
+*.log
+*.tmp
+*.swp
 
 # Environment files
 .env
@@ -23,19 +27,12 @@ htmlcov/
 .vscode/
 .idea/
 
-# Logs and temp files
-*.log
-*.tmp
-*.swp
+# Coverage reports
+.coverage
+coverage/
+htmlcov/
 
-# OS generated files
-.DS_Store
-Thumbs.db
-
-# Build artifacts
-dist/
-build/
-target/
+# Python cache
 .mypy_cache/
-.gradle/
+.pytest_cache/
 ```
