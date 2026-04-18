@@ -1,7 +1,11 @@
 """Change planning tool for generating ordered steps."""
 
+import logging
+
 from erp_wiki_mcp.graph.store import GraphStore
 from erp_wiki_mcp.registry.db import RegistryDB
+
+logger = logging.getLogger(__name__)
 
 
 async def handler(
@@ -20,8 +24,13 @@ async def handler(
     Returns:
         {steps: [{step_num, file_path, line_hint, action}], affected_symbols[]}
     """
+    logger.info(f"[change_plan] Starting handler for project_id={project_id}, task={task}")
+    
     registry = RegistryDB()
+    logger.info(f"[change_plan] Registry data_dir={registry.data_dir}")
+    
     graph_store = GraphStore(registry.data_dir)
+    logger.info(f"[change_plan] GraphStore initialized with db_path={graph_store.db_path if hasattr(graph_store, 'db_path') else 'N/A'}")
     
     # Find anchor symbol
     anchor_symbol = None

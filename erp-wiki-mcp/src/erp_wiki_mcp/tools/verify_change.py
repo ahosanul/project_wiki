@@ -1,7 +1,11 @@
 """Verify change tool for detecting issues after modifications."""
 
+import logging
+
 from erp_wiki_mcp.graph.store import GraphStore
 from erp_wiki_mcp.registry.db import RegistryDB
+
+logger = logging.getLogger(__name__)
 
 
 async def handler(
@@ -16,8 +20,13 @@ async def handler(
     Returns:
         {issues: [{type, severity, symbol_id, message}], resolved_count, new_unresolved_count}
     """
+    logger.info(f"[verify_change] Starting handler for run_id={run_id}")
+    
     registry = RegistryDB()
+    logger.info(f"[verify_change] Registry data_dir={registry.data_dir}")
+    
     graph_store = GraphStore(registry.data_dir)
+    logger.info(f"[verify_change] GraphStore initialized with db_path={graph_store.db_path if hasattr(graph_store, 'db_path') else 'N/A'}")
     
     issues = []
     
