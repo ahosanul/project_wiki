@@ -1,38 +1,8 @@
 ```
-# Compiled Python files
-*.pyc
-__pycache__/
-
-# Dependencies
-.venv/
-venv/
-node_modules/
-
-# Build directories
-dist/
-build/
-target/
-
-# Logs and temporary files
-*.log
-*.tmp
-*.swp
-
-# Environment files
-.env
-.env.local
-*.env.*
-
-# Editors
-.vscode/
-.idea/
-
-# Coverage reports
-.coverage
-coverage/
-htmlcov/
-
-# Python cache
-.mypy_cache/
-.pytest_cache/
+# Test fixtures - preserve .gitkeep files but ignore generated content
+erp-wiki-mcp/tests/fixtures/**/golden/*.json
+erp-wiki-mcp/tests/fixtures/**/grails/*.expected_symbols.json
+erp-wiki-mcp/tests/fixtures/**/groovy/*.expected_symbols.json
+erp-wiki-mcp/tests/fixtures/**/gsp/*.expected_symbols.json
+erp-wiki-mcp/tests/fixtures/**/java/*.expected_symbols.json
 ```
