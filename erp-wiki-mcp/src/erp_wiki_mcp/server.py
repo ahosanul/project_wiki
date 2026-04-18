@@ -8,6 +8,7 @@ from pathlib import Path
 
 import structlog
 from mcp.server import Server
+import mcp.types as types
 
 from erp_wiki_mcp.config import settings
 from erp_wiki_mcp.registry.db import RegistryDB
@@ -107,10 +108,10 @@ def create_server() -> Server:
     async def list_tools() -> list:
         """List available MCP tools."""
         return [
-            {
-                "name": "index_project",
-                "description": "Index a Grails/Java project into the knowledge graph",
-                "inputSchema": {
+            types.Tool(
+                name="index_project",
+                description="Index a Grails/Java project into the knowledge graph",
+                inputSchema={
                     "type": "object",
                     "properties": {
                         "path": {
@@ -135,11 +136,11 @@ def create_server() -> Server:
                     },
                     "required": ["path"],
                 },
-            },
-            {
-                "name": "status",
-                "description": "Get status of an indexing run or project",
-                "inputSchema": {
+            ),
+            types.Tool(
+                name="status",
+                description="Get status of an indexing run or project",
+                inputSchema={
                     "type": "object",
                     "properties": {
                         "run_id": {
@@ -152,7 +153,7 @@ def create_server() -> Server:
                         },
                     },
                 },
-            },
+            ),
         ]
 
     return server
