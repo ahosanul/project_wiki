@@ -1,8 +1,43 @@
 ```
-# Test fixtures - preserve .gitkeep files but ignore generated content
-erp-wiki-mcp/tests/fixtures/**/golden/*.json
-erp-wiki-mcp/tests/fixtures/**/grails/*.expected_symbols.json
-erp-wiki-mcp/tests/fixtures/**/groovy/*.expected_symbols.json
-erp-wiki-mcp/tests/fixtures/**/gsp/*.expected_symbols.json
-erp-wiki-mcp/tests/fixtures/**/java/*.expected_symbols.json
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Environment
+.venv/
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*.tmp
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
 ```
