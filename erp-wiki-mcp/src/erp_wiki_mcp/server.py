@@ -16,6 +16,7 @@ from erp_wiki_mcp.tools.index_project import index_project
 from erp_wiki_mcp.tools.status import get_status
 from erp_wiki_mcp.tools.list_projects import list_projects
 from erp_wiki_mcp.tools.rebuild import handler as rebuild_handler
+from erp_wiki_mcp.tools.ask import handler as ask_handler
 
 
 def setup_logging() -> None:
@@ -129,6 +130,27 @@ def create_server() -> Server:
 
         return [{"type": "text", "text": str(result)}]
 
+    @server.call_tool()
+    async def call_ask(name: str, arguments: dict) -> list:
+        """Handle ask tool calls."""
+        project_id = arguments.get("project_id")
+        question = arguments.get("question")
+        
+        if not project_id:
+            return [{"type": "text", "text": "Error: 'project_id' argument is required"}]
+        if not question:
+            return [{"type": "text", "text": "Error: 'question' argument is required"}]
+
+        max_depth = arguments.get("max_depth", 3)
+
+        result = await ask_handler(
+            project_id=project_id,
+            question=question,
+            max_depth=max_depth,
+        )
+
+        return [{"type": "text", "text": str(result)}]
+
     # Register tools with MCP
     @server.list_tools()
     async def list_tools() -> list:
@@ -211,6 +233,29 @@ def create_server() -> Server:
                         },
                     },
                     "required": ["project_id"],
+                },
+            ),
+            types.Tool(
+                name="ask",
+                description="Ask a natural language question about the codebase",
+                inputSchema={
+                    "type": "object",
+                    "properties": {
+                        "project_id": {
+                            "type": "string",
+                            "description": "Project identifier to query",
+                        },
+                        "question": {
+                            "type": "string",
+                            "description": "Natural language question about the codebase",
+                        },
+                        "max_depth": {
+                            "type": "integer",
+                            "default": 3,
+                            "description": "Maximum graph traversal depth",
+                        },
+                    },
+                    "required": ["project_id", "question"],
                 },
             ),
         ]
