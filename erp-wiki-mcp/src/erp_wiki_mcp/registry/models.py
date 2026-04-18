@@ -81,5 +81,12 @@ class RawEdge:
     type: str
     file_path: str
     line: int
-    confidence: float
+    confidence: str  # EXACT | LIKELY | HEURISTIC | UNRESOLVED
     extractor: str
+
+
+@dataclass
+class ResolvedEdge(RawEdge):
+    """Represents a resolved edge (same shape as RawEdge, but target_id is filled by resolver)."""
+
+    pass
