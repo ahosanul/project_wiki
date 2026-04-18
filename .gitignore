@@ -8,57 +8,53 @@ __pycache__/
 env/
 venv/
 .venv/
+.venv*/
 .ENV
-.venv.bak/
-pip-log.txt
-pip-delete-this-directory.txt
-.tox/
+.env
+.env.*
+.env.local
 .coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.log
+htmlcov/
+.coveragerc
+.python-version
+
+# Build and distribution artifacts
+dist/
+build/
+*.egg-info/
+.eggs/
+
+# Testing
 .pytest_cache/
 .mypy_cache/
+.hypothesis/
 
-# Distribution / packaging
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
+# Logs
+*.log
 
-# IDEs
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Editor files
 .vscode/
 .idea/
-
-# Environment
-.env
-.env.local
-*.env
 *.swp
 *.swo
 *.tmp
 
-# OS generated files
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
+# Compiled files
+*.o
+*.obj
+*.so
+*.a
+*.dll
+*.exe
+*.out
+*.class
+
+# Dependencies
+node_modules/
+target/
+.gradle/
 ```
