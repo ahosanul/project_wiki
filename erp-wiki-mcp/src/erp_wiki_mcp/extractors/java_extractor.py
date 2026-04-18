@@ -210,7 +210,15 @@ def _extract_class_nodes_and_edges(
     nodes.append(class_node)
 
     # Process children for methods, fields, etc.
+    # Need to find class_body and iterate its children
+    class_body = None
     for child in node.children:
+        if child.type == "class_body":
+            class_body = child
+            break
+    
+    if class_body is not None:
+        for child in class_body.children:
         if child.type == "method_declaration":
             method_nodes, method_edges = _extract_method_nodes_and_edges(
                 child, fqn, file_path, source, class_node.id

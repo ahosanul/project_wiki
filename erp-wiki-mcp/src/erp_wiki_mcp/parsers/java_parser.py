@@ -28,7 +28,7 @@ def get_parser() -> Parser:
     global _parser
     if _parser is None:
         _parser = Parser()
-        _parser.set_language(get_language())
+        _parser.language = get_language()
     return _parser
 
 
